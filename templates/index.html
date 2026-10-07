@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EduGenie AI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>EduGenie AI</h1>
+        <p>Your AI Learning Assistant</p>
+
+        <input
+            type="text"
+            id="question"
+            placeholder="Ask your question..."
+        >
+
+        <button onclick="askQuestion()">Ask</button>
+
+        <div id="answer"></div>
+    </div>
+
+    <script>
+        async function askQuestion() {
+            const question = document.getElementById("question").value;
+
+            const response = await fetch("/qa", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    question: question
+                })
+            });
+
+            const data = await response.json();
+
+            document.getElementById("answer").innerText = data.result;
+        }
+    </script>
+</body>
+</html>
