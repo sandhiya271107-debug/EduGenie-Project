@@ -6,7 +6,7 @@ def get_learning_recommendations(topic: str):
         client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
         prompt = f"Give me a step-by-step learning path for {topic} for a beginner student."
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-2.5-flash",
             contents=prompt
         )
         return response.text
