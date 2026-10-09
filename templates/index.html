@@ -2,42 +2,40 @@
 <html>
 <head>
     <title>EduGenie AI</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body { font-family: Arial; padding: 30px; max-width: 800px; margin: auto; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; }
+        button { padding: 10px 20px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        #output { margin-top: 20px; padding: 15px; border: 1px solid #ccc; background: #f9f9f9; white-space: pre-wrap; }
+    </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>EduGenie AI</h1>
-        <p>Your AI Learning Assistant</p>
+    <h1>EduGenie AI</h1>
+    <p>Your AI Learning Assistant</p>
 
-        <input
-            type="text"
-            id="question"
-            placeholder="Ask your question..."
-        >
+    <input type="text" id="question" placeholder="what is python?">
+    <button onclick="askAI()">Ask</button>
 
-        <button onclick="askQuestion()">Ask</button>
-
-        <div id="answer"></div>
-    </div>
+    <div id="output">Answer will appear here...</div>
 
     <script>
-        async function askQuestion() {
-            const question = document.getElementById("question").value;
+        async function askAI() {
+            const text = document.getElementById('question').value;
+            const output = document.getElementById('output');
+            output.innerText = "Loading... Please wait 30 sec (Render free server slow)...";
 
-            const response = await fetch("/qa", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    question: question
-                })
-            });
-
-            const data = await response.json();
-
-            document.getElementById("answer").innerText = data.result;
+            try {
+                const res = await fetch('/qa', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+                const data = await res.json();
+                console.log(data);
+                output.innerText = data.result || data.detail || JSON.stringify(data);
+            } catch (err) {
+                output.innerText = "Error: " + err.message + "\nCheck if GEMINI_API_KEY is set in Render Environment tab!";
+            }
         }
     </script>
 </body>
